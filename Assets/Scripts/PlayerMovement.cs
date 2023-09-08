@@ -10,12 +10,15 @@ public class PlayerMovement : MonoBehaviour
     public float sprintSpeed;
     public float walkSpeed;
     public float wallRunSpeed;
+    public float dashSpeed;
 
     public float groundDrag;
 
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
+    public float dashCooldown;
+    public float dashTime;
     bool readyToJump;
 
     bool readyToDoubleJump;
@@ -25,10 +28,14 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode doubleJumpkey = KeyCode.Q;
     public KeyCode sprintKey = KeyCode.LeftShift;
 
+    public KeyCode dashKey = KeyCode.E;
+
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
     bool grounded;
+    bool dashing = false;
+    bool canDash = true;
 
     public Transform orientation;
 
@@ -46,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
         walking,
         sprinting,
         wallrunning,
+        dashing,
         air
     }
 
@@ -74,10 +82,17 @@ public class PlayerMovement : MonoBehaviour
             moveSpeed = walkSpeed;
         }
 
+        else if (dashing)
+        {
+            state = MovementState.dashing;
+            moveSpeed = dashSpeed;
+        }
+
         //Air mode
         else
         {
             state = MovementState.air;
+            moveSpeed = sprintSpeed;
         }
 
     }
@@ -100,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         MovementStateHandle();
 
         // handle drag
-        if (grounded)
+        if (grounded && !dashing)
             rb.drag = groundDrag;
         else
             rb.drag = 0;
@@ -108,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
         // double jump reset
         if (grounded || state == MovementState.wallrunning)
             readyToDoubleJump = true;
+
     }
 
     private void FixedUpdate()
@@ -117,24 +133,34 @@ public class PlayerMovement : MonoBehaviour
 
     private void MyInput()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
 
-        // when to jump
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (!dashing)
         {
-            readyToJump = false;
 
-            Jump();
+            horizontalInput = Input.GetAxisRaw("Horizontal");
+            verticalInput = Input.GetAxisRaw("Vertical");
 
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }
+            // when to jump
+            if (Input.GetKey(jumpKey) && readyToJump && grounded)
+            {
+                readyToJump = false;
 
-        // when to double jump
-        if (Input.GetKey(doubleJumpkey) && !grounded && readyToDoubleJump)
-        {
-            readyToDoubleJump = false;
-            Jump();
+                Jump();
+
+                Invoke(nameof(ResetJump), jumpCooldown);
+            }
+
+            // when to double jump
+            if (Input.GetKey(doubleJumpkey) && !grounded && readyToDoubleJump && !wallrunning)
+            {
+                readyToDoubleJump = false;
+                Jump();
+            }
+
+            if (canDash && Input.GetKey(dashKey))
+            {
+                StartCoroutine(DashReset(dashTime));
+            }
         }
     }
 
@@ -174,5 +200,25 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+    private IEnumerator DashReset(float waitTime)
+    {
+        dashing = true;
+        canDash = false;
+
+        StartCoroutine(DashTimerReset(dashCooldown));
+
+        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        
+        yield return new WaitForSeconds(waitTime);
+
+        dashing = false;
+    }
+
+    private IEnumerator DashTimerReset(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        canDash = true;
     }
 }
