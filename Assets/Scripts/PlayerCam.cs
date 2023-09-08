@@ -16,9 +16,13 @@ public class PlayerCam : MonoBehaviour
 
     private void Start()
     {
+        // sets cursor to invisible and locks it with screen
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
+
+
 
     private void Update()
     {
@@ -36,10 +40,16 @@ public class PlayerCam : MonoBehaviour
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 
+
+
+
     public void DoFov(float endValue)
     {
         GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
     }
+
+
+
 
     public void DoTilt(float zTilt)
     {

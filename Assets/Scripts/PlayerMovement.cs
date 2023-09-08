@@ -33,9 +33,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
-    bool dashing = false;
-    bool canDash = true;
+    public bool grounded;
+    public bool dashing = false;
+    public bool canDash = true;
 
     public Transform orientation;
 
@@ -59,36 +59,40 @@ public class PlayerMovement : MonoBehaviour
 
     public bool wallrunning;
 
+
+
+
     private void MovementStateHandle()
     {
-        //Wallrunning mode
+        // wallrunning mode
         if (wallrunning)
         {
             state = MovementState.wallrunning;
             moveSpeed = wallRunSpeed;
         }
 
-        //Sprinting mode
+        // sprinting mode
         else if (grounded && Input.GetKey(sprintKey))
         {
             state = MovementState.sprinting;
             moveSpeed = sprintSpeed;
         }
 
-        //Walking mode
+        // walking mode
         else if (grounded)
         {
             state = MovementState.walking;
             moveSpeed = walkSpeed;
         }
 
+        // dashing mode
         else if (dashing)
         {
             state = MovementState.dashing;
             moveSpeed = dashSpeed;
         }
 
-        //Air mode
+        // air mode
         else
         {
             state = MovementState.air;
@@ -97,6 +101,9 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+
+
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -104,6 +111,9 @@ public class PlayerMovement : MonoBehaviour
 
         readyToJump = true;
     }
+
+
+
 
     private void Update()
     {
@@ -126,10 +136,16 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+
+
+
     private void FixedUpdate()
     {
         MovePlayer();
     }
+
+
+
 
     private void MyInput()
     {
@@ -137,6 +153,7 @@ public class PlayerMovement : MonoBehaviour
         if (!dashing)
         {
 
+            // get movement input
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -157,12 +174,16 @@ public class PlayerMovement : MonoBehaviour
                 Jump();
             }
 
+            // when to dash
             if (canDash && Input.GetKey(dashKey))
             {
                 StartCoroutine(DashReset(dashTime));
             }
         }
     }
+
+
+
 
     private void MovePlayer()
     {
@@ -178,8 +199,12 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
     }
 
+
+
+
     private void SpeedControl()
     {
+        // define flat velocity
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         // limit velocity if needed
@@ -190,6 +215,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+
+
     private void Jump()
     {
         // reset y velocity
@@ -197,18 +225,28 @@ public class PlayerMovement : MonoBehaviour
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
+
+
+
+
     private void ResetJump()
     {
         readyToJump = true;
     }
 
+
+
+
+    // reset dash state
     private IEnumerator DashReset(float waitTime)
     {
         dashing = true;
         canDash = false;
 
+        // dash cooldown timer
         StartCoroutine(DashTimerReset(dashCooldown));
 
+        // jump before dash to avoid ground drag
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         
         yield return new WaitForSeconds(waitTime);
@@ -216,6 +254,10 @@ public class PlayerMovement : MonoBehaviour
         dashing = false;
     }
 
+
+
+
+    // reset dash time (cooldown)
     private IEnumerator DashTimerReset(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);

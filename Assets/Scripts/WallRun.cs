@@ -46,11 +46,17 @@ public class WallRun : MonoBehaviour
     private PlayerMovement pm;
     private Rigidbody rb;
 
+
+
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<PlayerMovement>();
     }
+
+
+
 
     private void Update()
     {
@@ -58,22 +64,35 @@ public class WallRun : MonoBehaviour
         StateMachine();
     }
 
+
+
+
     private void FixedUpdate()
     {
         if (pm.wallrunning)
             WallRunningMovement();
     }
 
+
+
+
     private void CheckForWall()
     {
+        // checks which side the wall is on if there is one
         wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallhit, wallCheckDistance, whatIsWall);
         wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallhit, wallCheckDistance, whatIsWall);
     }
+
+
+
 
     private bool AboveGround()
     {
         return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight, whatIsGround);
     }
+
+
+
 
     private void StateMachine()
     {
@@ -125,6 +144,9 @@ public class WallRun : MonoBehaviour
         }
     }
 
+
+
+
     private void StartWallRun()
     {
         pm.wallrunning = true;
@@ -138,6 +160,9 @@ public class WallRun : MonoBehaviour
         if (wallLeft) cam.DoTilt(-5f);
         if (wallRight) cam.DoTilt(5f);
     }
+
+
+
 
     private void WallRunningMovement()
     {
@@ -168,6 +193,9 @@ public class WallRun : MonoBehaviour
             rb.AddForce(transform.up * gravityCounterForce, ForceMode.Force);
     }
 
+
+
+
     private void StopWallRun()
     {
         pm.wallrunning = false;
@@ -176,6 +204,9 @@ public class WallRun : MonoBehaviour
         cam.DoFov(80f);
         cam.DoTilt(0f);
     }
+
+
+
 
     private void WallJump()
     {
@@ -191,4 +222,8 @@ public class WallRun : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(forceToApply, ForceMode.Impulse);
     }
+
+
+
+    
 }
