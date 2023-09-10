@@ -156,7 +156,7 @@ public class WallRun : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         // apply camera effects
-        cam.DoFov(90f);
+        cam.DoFov(pm.wallRunFov * pm.stimFovBoost);
         if (wallLeft) cam.DoTilt(-5f);
         if (wallRight) cam.DoTilt(5f);
     }
@@ -201,7 +201,7 @@ public class WallRun : MonoBehaviour
         pm.wallrunning = false;
 
         // reset camera effects
-        cam.DoFov(80f);
+        cam.DoFov(pm.walkFov * pm.stimFovBoost);
         cam.DoTilt(0f);
     }
 
