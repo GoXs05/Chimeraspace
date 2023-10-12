@@ -141,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // called at the start of the program
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -152,6 +153,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // called every frame of the program
     private void Update()
     {
         // ground check
@@ -177,6 +179,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // called 50 times per second for physics calculations
     private void FixedUpdate()
     {
         MovePlayer();
@@ -185,6 +188,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // handles Input for WASD, jumping, double jumping, and dashing
     private void MyInput()
     {
 
@@ -223,6 +227,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // controls force additions to player's rigidbody component based on input
     private void MovePlayer()
     {
         // calculate movement direction
@@ -251,6 +256,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // controls and standardizes speed 
     private void SpeedControl()
     {
         // limit velocity on slope if needed
@@ -282,6 +288,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // handles movement stim boosters
     private void MovementStim()
     {
         // movement stim handling
@@ -299,6 +306,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // handles jump force additions to player's rigidbody component
     private void Jump()
     {
         exitingSlope = true;
@@ -312,6 +320,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // resets jump bools
     private void ResetJump()
     {
         readyToJump = true;
@@ -320,6 +329,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // handles slope movement
     private bool OnSlope()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, (playerHeight * 0.5f) + 0.3f))
@@ -333,6 +343,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // returns angle of slope as a vector3
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
@@ -373,6 +384,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    // reset stim effects
     private void StimReset()
     {
         stimBoost = 1f;
@@ -381,6 +393,7 @@ public class PlayerMovement : MonoBehaviour
     
     
     
+    // reset stim cooldown
     private void StimTimerReset()
     {
         canStim = true;

@@ -11,8 +11,8 @@ public class PlatformMovement : MonoBehaviour
 
     void Start()
     {
-        startPos = transform.position;
-        freqFactor = Random.Range(freqFactor - 0.1f, freqFactor + 0.1f);
+        startPos = transform.position; // sets bottom position of sin wave motion
+        freqFactor = Random.Range(freqFactor - 0.1f, freqFactor + 0.1f); // sets a random frequency factor
     }
 
     void Update()
