@@ -1,5 +1,6 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
+using System.Collections;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
 
@@ -14,29 +15,29 @@ public class GunScriptableObject : ScriptableObject
     public ShootConfiguration shootConfig;
     public TrailConfiguration trailConfig;
 
-    private MonoBehavior activeMonoBehavior;
+    private MonoBehaviour activeMonoBehaviour;
     private GameObject model;
     private float lastShootTime;
     private ParticleSystem shootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
 
-    public void Spawn(Transform parent, MonoBehavior activeMonoBehavior)
+    public void Spawn(Transform parent, MonoBehaviour activeMonoBehaviour)
     {
-        this.activeMonoBehavior = activeMonoBehavior;
+        this.activeMonoBehaviour = activeMonoBehaviour;
         lastShootTime = 0;
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
 
         model = Instantiate(modelPrefab);
-        model.transform.setParent(parent, false);
+        model.transform.SetParent(parent, false);
         model.transform.localPosition = spawnPoint;
         model.transform.localRotation = Quaternion.Euler(spawnRotation);
 
-        shootSystem = model.GetComponentinChildren<ParticleSystem>();
+        shootSystem = model.GetComponentInChildren<ParticleSystem>();
     }
 
     public void Shoot()
     {
-        if (Time.time > shootConfig.time + lastShootTime)
+        if (Time.time > shootConfig.FireRate + lastShootTime)
         {
             lastShootTime = Time.time;
             shootSystem.Play();
@@ -56,7 +57,7 @@ public class GunScriptableObject : ScriptableObject
                         shootConfig.Spread.z
                     )
                 );
-            shootDirection.normalize();
+            shootDirection.Normalize();
         }
     }
 
@@ -68,7 +69,7 @@ public class GunScriptableObject : ScriptableObject
         trail.colorGradient = trailConfig.color;
         trail.material = trailConfig.material;
         trail.widthCurve = trailConfig.widthCurve;
-        trail.time = trailConfig.time;
+        trail.time = trailConfig.duration;
         trail.minVertexDistance = trailConfig.minVertexDistance;
 
         trail.emitting = false;
