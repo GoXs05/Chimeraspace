@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class WallRun : MonoBehaviour
 {
+    #region Variables
     [Header("Wallrunning")]
-    public LayerMask whatIsWall;
-    public LayerMask whatIsGround;
-    public float wallRunForce;
-    public float wallJumpUpForce;
-    public float wallJumpSideForce;
-    public float wallClimbSpeed;
-    public float maxWallRunTime;
+    [SerializeField] private LayerMask whatIsWall;
+    [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private float wallRunForce;
+    [SerializeField] private float wallJumpUpForce;
+    [SerializeField] private float wallJumpSideForce;
+    [SerializeField] private float wallClimbSpeed;
+    [SerializeField] private float maxWallRunTime;
     private float wallRunTimer;
 
     [Header("Input")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode upwardsRunKey = KeyCode.LeftShift;
-    public KeyCode downwardsRunKey = KeyCode.LeftControl;
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode upwardsRunKey = KeyCode.LeftShift;
+    [SerializeField] private KeyCode downwardsRunKey = KeyCode.LeftControl;
     private bool upwardsRunning;
     private bool downwardsRunning;
     private float horizontalInput;
     private float verticalInput;
 
     [Header("Detection")]
-    public float wallCheckDistance;
-    public float minJumpHeight;
+    [SerializeField] private float wallCheckDistance;
+    [SerializeField] private float minJumpHeight;
     private RaycastHit leftWallhit;
     private RaycastHit rightWallhit;
     private bool wallLeft;
@@ -33,21 +34,34 @@ public class WallRun : MonoBehaviour
 
     [Header("Exiting")]
     private bool exitingWall;
-    public float exitWallTime;
+    [SerializeField] private float exitWallTime;
     private float exitWallTimer;
 
     [Header("Gravity")]
-    public bool useGravity;
-    public float gravityCounterForce;
+    [SerializeField] private bool useGravity;
+    [SerializeField] private float gravityCounterForce;
 
     [Header("References")]
-    public Transform orientation;
-    public PlayerCam cam;
+    [SerializeField] private Transform orientation;
+    [SerializeField] private PlayerCam cam;
     private PlayerMovement pm;
     private Rigidbody rb;
+    #endregion
 
-
-
+    #region Getters
+    public LayerMask getWhatIsWall() { return whatIsWall; }
+    public LayerMask getWhatIsGround() { return whatIsGround; }
+    public float getWallRunForce() { return wallRunForce; }
+    public float getWallJumpUpForce() { return wallJumpUpForce; }
+    public float getWallJumpSideForce() { return wallJumpSideForce; }
+    public float getWallClimbSpeed() { return wallClimbSpeed; }
+    public float getMaxWallRunTime() { return maxWallRunTime; }
+    public float getWallrRunTimer() { return wallRunTimer; }
+    public float getWallCheckDistance() { return wallCheckDistance; }
+    public float getMinJumpHeight() { return minJumpHeight; }
+    public float getExitWallTime() { return exitWallTime; }
+    public float getGravityCounterForce() { return gravityCounterForce; }
+    #endregion
 
     private void Start()
     {
@@ -55,26 +69,17 @@ public class WallRun : MonoBehaviour
         pm = GetComponent<PlayerMovement>();
     }
 
-
-
-
     private void Update()
     {
         CheckForWall();
         StateMachine();
     }
 
-
-
-
     private void FixedUpdate()
     {
         if (pm.wallrunning)
             WallRunningMovement();
     }
-
-
-
 
     private void CheckForWall()
     {
@@ -83,16 +88,10 @@ public class WallRun : MonoBehaviour
         wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallhit, wallCheckDistance, whatIsWall);
     }
 
-
-
-
     private bool AboveGround()
     {
         return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight, whatIsGround);
     }
-
-
-
 
     private void StateMachine()
     {
@@ -144,9 +143,6 @@ public class WallRun : MonoBehaviour
         }
     }
 
-
-
-
     private void StartWallRun()
     {
         pm.wallrunning = true;
@@ -156,13 +152,10 @@ public class WallRun : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         // apply camera effects
-        cam.DoFov(pm.wallRunFov * pm.stimFovBoost);
+        cam.DoFov(pm.getWallRunFov() * pm.getStimFovBoost());
         if (wallLeft) cam.DoTilt(-5f);
         if (wallRight) cam.DoTilt(5f);
     }
-
-
-
 
     private void WallRunningMovement()
     {
@@ -193,20 +186,14 @@ public class WallRun : MonoBehaviour
             rb.AddForce(transform.up * gravityCounterForce, ForceMode.Force);
     }
 
-
-
-
     private void StopWallRun()
     {
         pm.wallrunning = false;
 
         // reset camera effects
-        cam.DoFov(pm.walkFov * pm.stimFovBoost);
+        cam.DoFov(pm.getWalkFov() * pm.getStimFovBoost());
         cam.DoTilt(0f);
     }
-
-
-
 
     private void WallJump()
     {
@@ -222,8 +209,4 @@ public class WallRun : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(forceToApply, ForceMode.Impulse);
     }
-
-
-
-    
 }

@@ -5,63 +5,63 @@ using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
+    #region Variables
     [Header("Movement")]
     private float moveSpeed;
-    public float sprintSpeed;
-    public float walkSpeed;
-    public float wallRunSpeed;
-    public float dashSpeed;
-    public float stimMultiplier;
-    private float stimBoost = 1f;
-    public float stimDuration;
-    public float stimCooldown;
+    [SerializeField] private float sprintSpeed;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float wallRunSpeed;
+    [SerializeField] private float dashSpeed;
+    [SerializeField] private float stimMultiplier;
+    [SerializeField] private float stimBoost;
+    [SerializeField] private float stimDuration;
+    [SerializeField] private float stimCooldown;
 
-    public bool canStim = true;
+    [SerializeField] private bool canStim = true;
 
-    public float groundDrag;
+    [SerializeField] private float groundDrag;
 
-    public float jumpForce;
-    public float jumpCooldown;
-    public float airMultiplier;
-    public float dashCooldown;
-    public float dashTime;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float jumpCooldown;
+    [SerializeField] private float airMultiplier;
+    [SerializeField] private float dashCooldown;
+    [SerializeField] private float dashTime;
     bool readyToJump;
 
     bool readyToDoubleJump;
 
     [Header("Camera")]
-    public PlayerCam cam;
-    public float walkFov;
-
-    public float sprintFov;
-    public float dashFov;
-    public float wallRunFov;
-    public float stimFovMultiplier;
-    public float stimFovBoost = 1f;
+    [SerializeField] private PlayerCam cam;
+    [SerializeField] private float walkFov;
+    [SerializeField] private float sprintFov;
+    [SerializeField] private float dashFov;
+    [SerializeField] private float wallRunFov;
+    [SerializeField] private float stimFovMultiplier;
+    [SerializeField] private float stimFovBoost = 1f;
 
     [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode doubleJumpkey = KeyCode.Q;
-    public KeyCode sprintKey = KeyCode.LeftShift;
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode doubleJumpkey = KeyCode.Q;
+    [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
 
-    public KeyCode dashKey = KeyCode.E;
-    private KeyCode stimKey = KeyCode.C;
+    [SerializeField] private KeyCode dashKey = KeyCode.E;
+    [SerializeField] private KeyCode stimKey = KeyCode.C;
 
     [Header("Ground Check")]
-    public float playerHeight;
-    public LayerMask whatIsGround;
-    public bool grounded;
+    [SerializeField] private float playerHeight;
+    [SerializeField] private LayerMask whatIsGround;
+    private bool grounded;
 
     [Header("Slope Handling")]
-    public float maxSlopeAngle;
+    [SerializeField] private float maxSlopeAngle;
     private RaycastHit slopeHit;
     private bool exitingSlope;
 
     [Header("Dashing")]
-    public bool dashing = false;
-    public bool canDash = true;
+    private bool dashing = false;
+    private bool canDash = true;
 
-    public Transform orientation;
+    [SerializeField] private Transform orientation;
 
     float horizontalInput;
     float verticalInput;
@@ -82,9 +82,35 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public bool wallrunning;
+    #endregion
 
+    #region Getters
+    public float getSprintSpeed() { return sprintSpeed; }
+    public float getWalkSpeed() { return walkSpeed; }
+    public float getWallRunSpeed() { return wallRunSpeed; }
+    public float getStimMultiplier() { return stimMultiplier; }
+    public float getStimBoost() { return stimBoost; }
+    public float getStimDuration() { return stimDuration; }
+    public float getStimCooldown() { return stimCooldown; }
+    public bool getCanStim() { return canStim; }
+    public float getGroundDrag() { return groundDrag; }
+    public float getJumpForce() { return jumpForce; }
+    public float getJumpCooldown() { return jumpCooldown; }
+    public float getAirMultiplier() { return airMultiplier; }
+    public float getDashCooldown() { return dashCooldown; }
+    public float getDashTime() { return dashTime; }
 
+    public float getWalkFov() { return walkFov; }
+    public float getSprintFov() { return sprintFov; }
+    public float getDashFov() { return dashFov; }
+    public float getWallRunFov() { return wallRunFov; }
+    public float getStimFovBoost() { return stimFovBoost; }
 
+    public LayerMask getGroundLayer() { return whatIsGround; }
+    public bool getGrounded() { return grounded; }
+    public bool getDashing() { return dashing; }
+    public bool getCanDash() { return canDash; }
+    #endregion
 
     private void MovementStateHandle()
     {
@@ -138,24 +164,20 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-
-
-
     // called at the start of the program
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-
         readyToJump = true;
     }
-
-
-
 
     // called every frame of the program
     private void Update()
     {
+        Debug.Log(horizontalInput);
+        Debug.Log(verticalInput);
+
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
@@ -176,25 +198,17 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-
-
-
     // called 50 times per second for physics calculations
     private void FixedUpdate()
     {
         MovePlayer();
     }
 
-
-
-
     // handles Input for WASD, jumping, double jumping, and dashing
     private void MyInput()
     {
-
         if (!dashing)
         {
-
             // get movement input
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
@@ -224,9 +238,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
-
-
     // controls force additions to player's rigidbody component based on input
     private void MovePlayer()
     {
@@ -252,9 +263,6 @@ public class PlayerMovement : MonoBehaviour
         else if (!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
     }
-
-
-
 
     // controls and standardizes speed 
     private void SpeedControl()
@@ -286,8 +294,6 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
-
-
     // handles movement stim boosters
     private void MovementStim()
     {
@@ -303,9 +309,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
-
-
     // handles jump force additions to player's rigidbody component
     private void Jump()
     {
@@ -317,17 +320,12 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
 
-
-
-
     // resets jump bools
     private void ResetJump()
     {
         readyToJump = true;
         exitingSlope = false;
     }
-
-
 
     // handles slope movement
     private bool OnSlope()
@@ -341,16 +339,11 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-
-
     // returns angle of slope as a vector3
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
-
-
-
 
     // reset dash state
     private IEnumerator DashReset(float waitTime)
@@ -372,9 +365,6 @@ public class PlayerMovement : MonoBehaviour
         cam.DoFov(walkFov * stimFovBoost);
     }
 
-
-
-
     // reset dash time (cooldown)
     private IEnumerator DashTimerReset(float waitTime)
     {
@@ -382,17 +372,13 @@ public class PlayerMovement : MonoBehaviour
         canDash = true;
     }
 
-
-
     // reset stim effects
     private void StimReset()
     {
         stimBoost = 1f;
         stimFovBoost = 1f;
     }
-    
-    
-    
+
     // reset stim cooldown
     private void StimTimerReset()
     {

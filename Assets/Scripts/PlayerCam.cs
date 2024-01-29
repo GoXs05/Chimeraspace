@@ -5,14 +5,16 @@ using DG.Tweening;
 
 public class PlayerCam : MonoBehaviour
 {
-    public float sensX;
-    public float sensY;
+    #region Variables
+    [SerializeField] private float sensX;
+    [SerializeField] private float sensY;
 
-    public Transform orientation;
-    public Transform camHolder;
+    [SerializeField] private Transform orientation;
+    [SerializeField] private Transform camHolder;
 
     float xRotation;
     float yRotation;
+    #endregion
 
     private void Start()
     {
@@ -20,9 +22,6 @@ public class PlayerCam : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
-
-
 
     private void Update()
     {
@@ -40,16 +39,10 @@ public class PlayerCam : MonoBehaviour
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 
-
-
-
     public void DoFov(float endValue)
     {
         GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
     }
-
-
-
 
     public void DoTilt(float zTilt)
     {

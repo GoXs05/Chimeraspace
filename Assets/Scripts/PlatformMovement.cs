@@ -6,8 +6,8 @@ public class PlatformMovement : MonoBehaviour
 {
     private Vector3 startPos;
 
-    public float freqFactor;
-    public float amplitude;
+    [SerializeField] private float freqFactor;
+    [SerializeField] private float amplitude;
 
     void Start()
     {

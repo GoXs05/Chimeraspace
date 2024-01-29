@@ -67002,15 +67002,15 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2051728805321892950, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2140431391207155297, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3909922007002614980, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
+        type: 3}
+      propertyPath: stimBoost
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6877276664784286752, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
         type: 3}
