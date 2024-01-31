@@ -175,8 +175,6 @@ public class PlayerMovement : MonoBehaviour
     // called every frame of the program
     private void Update()
     {
-        Debug.Log(horizontalInput);
-        Debug.Log(verticalInput);
 
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);

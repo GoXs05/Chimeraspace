@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7322116126943834994}
   - component: {fileID: 4607519462709059080}
   - component: {fileID: 6985571590069649602}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Grid1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2337619129889638585}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WallRunPad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,14 +108,14 @@ Transform:
   m_GameObject: {fileID: 3730825026865015808}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3704587404731784113}
   - {fileID: 7322116126943834994}
   - {fileID: 8767971150131988573}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4978003438840154249
 GameObject:
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 6433901288079044152}
   - component: {fileID: 5031479305400673639}
   - component: {fileID: 2007333138893956342}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WallRunPadMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -179,7 +179,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5682985e1e90b1645abe535e3e091327, type: 2}
+  - {fileID: 2100000, guid: 865e35c9ba1ad424fb8fa36178794f39, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 8767971150131988573}
   - component: {fileID: 1963898947059087974}
   - component: {fileID: 7144138410156513105}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Grid6
   m_TagString: Untagged
   m_Icon: {fileID: 0}

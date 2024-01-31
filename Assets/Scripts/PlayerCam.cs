@@ -11,6 +11,7 @@ public class PlayerCam : MonoBehaviour
 
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform camHolder;
+    [SerializeField] private Recoil Recoil_Script;
 
     float xRotation;
     float yRotation;
@@ -35,7 +36,7 @@ public class PlayerCam : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         // rotate cam and orientation
-        camHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        camHolder.rotation = Quaternion.Euler(new Vector3(xRotation, yRotation, 0) + Recoil_Script.getCurrentRotation());
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 
