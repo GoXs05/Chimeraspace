@@ -4,28 +4,25 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    [SerializeField] private float damage = 10f;
-    [SerializeField] private float range = 100f;
     [SerializeField] private Camera fpsCam;
-
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private GameObject light;
 
-
     [SerializeField] private Recoil Recoil_Script;
-
     [SerializeField] private GunData gunData;
 
+    [SerializeField] private KeyCode reloadKey = KeyCode.R;
+
+    private float timeSinceLastShot = 0f;
 
 
-    // Update is called once per frame
-    void Update()
+    public void StartReload()
     {
-        if (Input.GetMouseButton(0))
-        {
-            Shoot();
-        }
+        if (!gunData.reloading && this.gameObject.activeSelf)
+            StartCoroutine(Reload());
     }
+
+    private bool CanShoot() => !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate / 60);
 
     void Shoot()
     {
@@ -34,13 +31,16 @@ public class Gun : MonoBehaviour
         Invoke("LightOff", 0.1f);
         
 
-        RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
+        RaycastHit hitInfo;
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, gunData.maxDistance))
         {
-            Debug.Log(hit.transform.name);
+            Debug.Log(hitInfo.transform.name);
         }
 
         Recoil_Script.RecoilFire();
+        gunData.currentAmmo--;
+        timeSinceLastShot = 0;
+
     }
 
     void LightOff() 
@@ -48,5 +48,26 @@ public class Gun : MonoBehaviour
         light.transform.GetComponent<Light>().enabled = false;
     }
 
+    private IEnumerator Reload()
+    {
+        gunData.reloading = true;
 
+        yield return new WaitForSeconds(gunData.reloadTime);
+
+        gunData.currentAmmo = gunData.magSize;
+        gunData.reloading = false;
+    }
+
+    void Update()
+    {
+        timeSinceLastShot += Time.deltaTime;
+        if (Input.GetMouseButton(0) && CanShoot() && gunData.currentAmmo > 0)
+        {
+            Shoot();
+        }
+        if (Input.GetKeyDown(reloadKey))
+        {
+            StartReload();
+        }
+    }
 }

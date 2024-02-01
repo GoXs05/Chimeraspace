@@ -67447,27 +67447,37 @@ PrefabInstance:
     - target: {fileID: 1136300097357320870, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
         type: 3}
       propertyPath: multiplier
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2140431391207155297, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
         type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2884815781482954756, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
+        type: 3}
+      propertyPath: sensX
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2884815781482954756, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
+        type: 3}
+      propertyPath: sensY
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3965849226275356758, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
         type: 3}
       propertyPath: recoilX
-      value: -0.5
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 3965849226275356758, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
         type: 3}
       propertyPath: recoilY
-      value: 0.75
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3965849226275356758, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
         type: 3}
       propertyPath: recoilZ
-      value: 0.1
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 6877276664784286752, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
         type: 3}
@@ -67524,6 +67534,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8937407079794925428, guid: 4d0e3825fcb81c74ca677bf783a3eed1,
+        type: 3}
+      propertyPath: gunData
+      value: 
+      objectReference: {fileID: 11400000, guid: 970e6b379c1311f48bde7f1512ba86f5,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
