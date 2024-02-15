@@ -16,6 +16,21 @@ public class Recoil : MonoBehaviour
     public Vector3 getTargetRotation() { return targetRotation; }
     public Vector3 getCurrentRotation() { return currentRotation; }
 
+    public void setRecoilX(float newRecoilX) 
+    {
+        recoilX = newRecoilX;
+    }
+
+    public void setRecoilY(float newRecoilY) 
+    {
+        recoilY = newRecoilY;
+    }
+
+    public void setRecoilZ(float newRecoilZ) 
+    {
+        recoilZ = newRecoilZ;
+    }
+
     void Start()
     {
         

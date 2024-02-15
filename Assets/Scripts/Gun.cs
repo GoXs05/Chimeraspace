@@ -6,16 +6,27 @@ public class Gun : MonoBehaviour
 {
     [SerializeField] private Camera fpsCam;
     [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField] private GameObject light;
+    [SerializeField] private new GameObject light;
 
     [SerializeField] private Recoil Recoil_Script;
     [SerializeField] private GunData gunData;
 
     [SerializeField] private KeyCode reloadKey = KeyCode.R;
 
+    [SerializeField] private float ARRecoilX;
+    [SerializeField] private float ARRecoilY;
+    [SerializeField] private float ARRecoilZ;
+
+    private RaycastHit hit;
+
     private float timeSinceLastShot = 0f;
 
 
+
+    public void Start()
+    {
+        gunData.reloading = false;
+    }
     public void StartReload()
     {
         if (!gunData.reloading && this.gameObject.activeSelf)
@@ -34,13 +45,24 @@ public class Gun : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, gunData.maxDistance))
         {
-            Debug.Log(hitInfo.transform.name);
+            // Debug.Log(hitInfo.transform);
+            IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
+            damageable?.TakeDamage(gunData.damage);
+            hit = hitInfo;
         }
 
         Recoil_Script.RecoilFire();
         gunData.currentAmmo--;
         timeSinceLastShot = 0;
 
+        // Check for target to apply impact
+        TargetHandler();
+    }
+
+    private void TargetHandler()
+    {
+        ITarget target = hit.transform.GetComponent<ITarget>();
+        target?.TakeImpact(gunData.impactForce, hit);
     }
 
     void LightOff() 
@@ -58,6 +80,16 @@ public class Gun : MonoBehaviour
         gunData.reloading = false;
     }
 
+    private void GunManager() 
+    {
+        if (gunData.name == "AR") 
+        {
+            Recoil_Script.setRecoilX(ARRecoilX);
+            Recoil_Script.setRecoilY(ARRecoilY);
+            Recoil_Script.setRecoilZ(ARRecoilZ);
+        }
+    }
+
     void Update()
     {
         timeSinceLastShot += Time.deltaTime;
@@ -69,5 +101,7 @@ public class Gun : MonoBehaviour
         {
             StartReload();
         }
+
+        GunManager();
     }
 }
