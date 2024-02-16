@@ -11,6 +11,10 @@ public class GunData : ScriptableObject
     [Header("Shooting")]
     public float damage;
     public float maxDistance;
+    public float hipFireSpread;
+
+    [Header("Recoil")]
+    public RecoilInfoStruct recoilInfo;
 
     [Header("Physics")]
     public float impactForce;

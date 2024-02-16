@@ -10,22 +10,29 @@ public class Gun : MonoBehaviour
 
     [SerializeField] private Recoil Recoil_Script;
     [SerializeField] private GunData gunData;
+    [SerializeField] private PlayerMovement PM_Script;
+    private bool ads = false;
 
     [SerializeField] private KeyCode reloadKey = KeyCode.R;
-
-    [SerializeField] private float ARRecoilX;
-    [SerializeField] private float ARRecoilY;
-    [SerializeField] private float ARRecoilZ;
 
     private RaycastHit hit;
 
     private float timeSinceLastShot = 0f;
 
+    private RecoilInfoStruct recoilInfo;
 
+    private GameObject gunHolder;
+    private Animator gunHolderAnim;
+
+
+
+    public GunData getGunData() { return gunData; }
 
     public void Start()
     {
         gunData.reloading = false;
+        gunHolder = transform.parent.gameObject;
+        gunHolderAnim = gunHolder.GetComponent<Animator>();
     }
     public void StartReload()
     {
@@ -41,7 +48,6 @@ public class Gun : MonoBehaviour
         light.transform.GetComponent<Light>().enabled = true;
         Invoke("LightOff", 0.1f);
         
-
         RaycastHit hitInfo;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, gunData.maxDistance))
         {
@@ -82,11 +88,23 @@ public class Gun : MonoBehaviour
 
     private void GunManager() 
     {
-        if (gunData.name == "AR") 
+        if (transform.gameObject.activeSelf)
         {
-            Recoil_Script.setRecoilX(ARRecoilX);
-            Recoil_Script.setRecoilY(ARRecoilY);
-            Recoil_Script.setRecoilZ(ARRecoilZ);
+            Recoil_Script.setRecoilValues(gunData.recoilInfo);
+
+            PM_Script.SetGunScript(transform.GetComponent<Gun>());
+
+            ads = PM_Script.getADS();
+            Recoil_Script.setADS(ads);
+
+            if (ads)
+            {
+                gunHolderAnim.SetBool("ads", true);
+            }
+            else
+            {
+                gunHolderAnim.SetBool("ads", false);
+            }
         }
     }
 
@@ -103,5 +121,7 @@ public class Gun : MonoBehaviour
         }
 
         GunManager();
+
+        transform.localPosition = Recoil_Script.getCurrentPosition();
     }
 }

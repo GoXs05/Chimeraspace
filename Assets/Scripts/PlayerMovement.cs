@@ -13,11 +13,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float wallRunSpeed;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float stimMultiplier;
-    [SerializeField] private float stimBoost;
+    private float stimBoost = 1f;
     [SerializeField] private float stimDuration;
     [SerializeField] private float stimCooldown;
 
     [SerializeField] private bool canStim = true;
+    [SerializeField] private float adsMultiplier;
+    private float adsFactor = 1f;
 
     [SerializeField] private float groundDrag;
 
@@ -37,7 +39,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashFov;
     [SerializeField] private float wallRunFov;
     [SerializeField] private float stimFovMultiplier;
-    [SerializeField] private float stimFovBoost = 1f;
+    private float stimFovBoost = 1f;
+    [SerializeField] private float adsFovMultipler;
+    private float adsFovFactor = 1f;
 
     [Header("Keybinds")]
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
@@ -60,6 +64,10 @@ public class PlayerMovement : MonoBehaviour
     [Header("Dashing")]
     private bool dashing = false;
     private bool canDash = true;
+
+    [Header("ADS")]
+    private bool ads = false;
+    private Gun Gun_Script;
 
     [SerializeField] private Transform orientation;
 
@@ -84,6 +92,10 @@ public class PlayerMovement : MonoBehaviour
     public bool wallrunning;
     #endregion
 
+    public void SetGunScript(Gun New_Gun_Script) {
+        Gun_Script = New_Gun_Script;
+    }
+
     #region Getters
     public float getSprintSpeed() { return sprintSpeed; }
     public float getWalkSpeed() { return walkSpeed; }
@@ -105,11 +117,14 @@ public class PlayerMovement : MonoBehaviour
     public float getDashFov() { return dashFov; }
     public float getWallRunFov() { return wallRunFov; }
     public float getStimFovBoost() { return stimFovBoost; }
+    public float getADSFovFactor() { return adsFovFactor; }
 
     public LayerMask getGroundLayer() { return whatIsGround; }
     public bool getGrounded() { return grounded; }
     public bool getDashing() { return dashing; }
     public bool getCanDash() { return canDash; }
+
+    public bool getADS() { return ads; }
     #endregion
 
     private void MovementStateHandle()
@@ -118,30 +133,30 @@ public class PlayerMovement : MonoBehaviour
         if (wallrunning)
         {
             state = MovementState.wallrunning;
-            moveSpeed = wallRunSpeed * stimBoost;
+            moveSpeed = wallRunSpeed * stimBoost * adsFactor;
         }
 
         // sprinting mode
         else if (grounded && Input.GetKey(sprintKey))
         {
             state = MovementState.sprinting;
-            moveSpeed = sprintSpeed * stimBoost;
-            cam.DoFov(sprintFov * stimFovBoost);
+            moveSpeed = sprintSpeed * stimBoost * adsFactor;
+            cam.DoFov(sprintFov * stimFovBoost * adsFovFactor);
         }
 
         // walking mode
         else if (grounded)
         {
             state = MovementState.walking;
-            moveSpeed = walkSpeed * stimBoost;
-            cam.DoFov(walkFov * stimFovBoost);
+            moveSpeed = walkSpeed * stimBoost * adsFactor;
+            cam.DoFov(walkFov * stimFovBoost * adsFovFactor);
         }
 
         // dashing mode
         else if (dashing)
         {
             state = MovementState.dashing;
-            moveSpeed = dashSpeed * stimBoost;
+            moveSpeed = dashSpeed * stimBoost * adsFactor;
         }
 
         // air mode
@@ -151,14 +166,14 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetKey(sprintKey))
             {
-                moveSpeed = sprintSpeed * stimBoost;
-                cam.DoFov(sprintFov * stimFovBoost);
+                moveSpeed = sprintSpeed * stimBoost * adsFactor;
+                cam.DoFov(sprintFov * stimFovBoost * adsFovFactor);
             }
 
             else
             {
-                moveSpeed = walkSpeed * stimBoost;
-                cam.DoFov(walkFov * stimFovBoost);
+                moveSpeed = walkSpeed * stimBoost * adsFactor;
+                cam.DoFov(walkFov * stimFovBoost * adsFovFactor);
             }
         }
 
@@ -183,6 +198,7 @@ public class PlayerMovement : MonoBehaviour
         SpeedControl();
         MovementStateHandle();
         MovementStim();
+        ADSHandler();
 
         // handle drag
         if (grounded && !dashing)
@@ -307,6 +323,22 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void ADSHandler()
+    {
+        if (Input.GetMouseButton(1) && !Gun_Script.getGunData().reloading)
+        {
+            ads = true;
+            adsFactor = adsMultiplier;
+            adsFovFactor = adsFovMultipler;
+        }
+        else
+        {
+            ads = false;
+            adsFactor = 1f;
+            adsFovFactor = 1f;
+        }
+    }
+
     // handles jump force additions to player's rigidbody component
     private void Jump()
     {
@@ -349,7 +381,7 @@ public class PlayerMovement : MonoBehaviour
         dashing = true;
         canDash = false;
 
-        cam.DoFov(dashFov * stimFovBoost);
+        cam.DoFov(dashFov * stimFovBoost * adsFovFactor);
 
         // dash cooldown timer
         StartCoroutine(DashTimerReset(dashCooldown));
@@ -360,7 +392,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
 
         dashing = false;
-        cam.DoFov(walkFov * stimFovBoost);
+        cam.DoFov(walkFov * stimFovBoost * adsFovFactor);
     }
 
     // reset dash time (cooldown)

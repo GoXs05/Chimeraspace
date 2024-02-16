@@ -70,9 +70,7 @@ public class Target : MonoBehaviour, IDamageable, ITarget
     private IEnumerator RotationManager()
     {
         animator.SetBool("death", true);
-        Debug.Log("rotating on death");
         yield return new WaitForSeconds(2.975f);
         animator.SetBool("death", false);
-        Debug.Log("rotating on alive");
     }
 }
