@@ -325,7 +325,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ADSHandler()
     {
-        if (Input.GetMouseButton(1) && !Gun_Script.getGunData().reloading)
+        if (Input.GetMouseButton(1) && !Gun_Script.getGunData().getReloading())
         {
             ads = true;
             adsFactor = adsMultiplier;

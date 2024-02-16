@@ -27,14 +27,14 @@ public class Recoil : MonoBehaviour
 
     public void setRecoilValues(RecoilInfoStruct recoilInfo) 
     {
-        recoil = recoilInfo.recoil;
-        adsRecoil = recoilInfo.ADSRecoil;
-        posRecoil = recoilInfo.posRecoil;
-        snappiness = recoilInfo.snappiness;
-        returnSpeed = recoilInfo.returnSpeed;
-        posSnappiness = recoilInfo.posSnappiness;
-        posReturnSpeed = recoilInfo.posReturnSpeed;
-        adsPosRecoil = recoilInfo.ADSPosRecoil;
+        recoil = recoilInfo.getRecoil();
+        adsRecoil = recoilInfo.getADSRecoil();
+        posRecoil = recoilInfo.getPosRecoil();
+        snappiness = recoilInfo.getSnappiness();
+        returnSpeed = recoilInfo.getReturnSpeed();
+        posSnappiness = recoilInfo.getPosSnappiness();
+        posReturnSpeed = recoilInfo.getPosReturnSpeed();
+        adsPosRecoil = recoilInfo.getADSPosRecoil();
     }
 
     public void setADS(bool newAds) { ads = newAds; }

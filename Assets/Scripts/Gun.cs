@@ -30,17 +30,17 @@ public class Gun : MonoBehaviour
 
     public void Start()
     {
-        gunData.reloading = false;
+        gunData.setReloading(false);
         gunHolder = transform.parent.gameObject;
         gunHolderAnim = gunHolder.GetComponent<Animator>();
     }
     public void StartReload()
     {
-        if (!gunData.reloading && this.gameObject.activeSelf)
+        if (!gunData.getReloading() && this.gameObject.activeSelf)
             StartCoroutine(Reload());
     }
 
-    private bool CanShoot() => !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate / 60);
+    private bool CanShoot() => !gunData.getReloading() && timeSinceLastShot > 1f / (gunData.getFireRate() / 60);
 
     void Shoot()
     {
@@ -49,16 +49,16 @@ public class Gun : MonoBehaviour
         Invoke("LightOff", 0.1f);
         
         RaycastHit hitInfo;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, gunData.maxDistance))
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, gunData.getMaxDistance()))
         {
             // Debug.Log(hitInfo.transform);
             IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
-            damageable?.TakeDamage(gunData.damage);
+            damageable?.TakeDamage(gunData.getDamage());
             hit = hitInfo;
         }
 
         Recoil_Script.RecoilFire();
-        gunData.currentAmmo--;
+        gunData.DecrementCurrentAmmo();
         timeSinceLastShot = 0;
 
         // Check for target to apply impact
@@ -68,7 +68,7 @@ public class Gun : MonoBehaviour
     private void TargetHandler()
     {
         ITarget target = hit.transform.GetComponent<ITarget>();
-        target?.TakeImpact(gunData.impactForce, hit);
+        target?.TakeImpact(gunData.getImpactForce(), hit);
     }
 
     void LightOff() 
@@ -78,19 +78,19 @@ public class Gun : MonoBehaviour
 
     private IEnumerator Reload()
     {
-        gunData.reloading = true;
+        gunData.setReloading(true);
 
-        yield return new WaitForSeconds(gunData.reloadTime);
+        yield return new WaitForSeconds(gunData.getReloadTime());
 
-        gunData.currentAmmo = gunData.magSize;
-        gunData.reloading = false;
+        gunData.setCurrentAmmo(gunData.getMagSize());
+        gunData.setReloading(false);
     }
 
     private void GunManager() 
     {
         if (transform.gameObject.activeSelf)
         {
-            Recoil_Script.setRecoilValues(gunData.recoilInfo);
+            Recoil_Script.setRecoilValues(gunData.getRecoilInfo());
 
             PM_Script.SetGunScript(transform.GetComponent<Gun>());
 
@@ -111,7 +111,7 @@ public class Gun : MonoBehaviour
     void Update()
     {
         timeSinceLastShot += Time.deltaTime;
-        if (Input.GetMouseButton(0) && CanShoot() && gunData.currentAmmo > 0)
+        if (Input.GetMouseButton(0) && CanShoot() && gunData.getCurrentAmmo() > 0)
         {
             Shoot();
         }
