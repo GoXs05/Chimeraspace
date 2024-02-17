@@ -20,14 +20,15 @@ MonoBehaviour:
     recoil: {x: -2.5, y: 3, z: 0.5}
     ADSRecoil: {x: -1.5, y: 2, z: 0.3}
     posRecoil: {x: 0.025, y: 0.005, z: 0.01}
-    ADSPosRecoil: {x: 0.015, y: 0.003, z: 0.006}
+    ADSPosRecoil: {x: 0.01, y: 0.002, z: 0.003}
     snappiness: 6
-    returnSpeed: 4
-    posSnappiness: 12
+    returnSpeed: 5
+    posSnappiness: 13
     posReturnSpeed: 10
   impactForce: 0.5
-  currentAmmo: 11
+  currentAmmo: 30
   magSize: 30
-  fireRate: 600
+  fireRate: 450
+  adsFireRateMultiplier: 0
   reloadTime: 1.5
-  reloading: 1
+  reloading: 0

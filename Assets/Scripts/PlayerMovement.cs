@@ -35,9 +35,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Camera")]
     [SerializeField] private PlayerCam cam;
     [SerializeField] private float walkFov;
-    [SerializeField] private float sprintFov;
+    [SerializeField] private float sprintFovMultiplier;
     [SerializeField] private float dashFov;
-    [SerializeField] private float wallRunFov;
+    [SerializeField] private float wallRunFovMultiplier;
     [SerializeField] private float stimFovMultiplier;
     private float stimFovBoost = 1f;
     [SerializeField] private float adsFovMultipler;
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
 
-    public MovementState state;
+    private MovementState state;
 
     public enum MovementState
     {
@@ -97,6 +97,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
     #region Getters
+    public MovementState getMovementState() { return state; }
+    public float getHorizontalInput() { return horizontalInput; }
+    public float getVerticalInput() { return verticalInput; }
     public float getSprintSpeed() { return sprintSpeed; }
     public float getWalkSpeed() { return walkSpeed; }
     public float getWallRunSpeed() { return wallRunSpeed; }
@@ -113,9 +116,9 @@ public class PlayerMovement : MonoBehaviour
     public float getDashTime() { return dashTime; }
 
     public float getWalkFov() { return walkFov; }
-    public float getSprintFov() { return sprintFov; }
+    public float getSprintFovMultiplier() { return sprintFovMultiplier; }
     public float getDashFov() { return dashFov; }
-    public float getWallRunFov() { return wallRunFov; }
+    public float getWallRunFovMultiplier() { return wallRunFovMultiplier; }
     public float getStimFovBoost() { return stimFovBoost; }
     public float getADSFovFactor() { return adsFovFactor; }
 
@@ -137,11 +140,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // sprinting mode
-        else if (grounded && Input.GetKey(sprintKey))
+        else if (grounded && Input.GetKey(sprintKey) && moveDirection != Vector3.zero)
         {
             state = MovementState.sprinting;
             moveSpeed = sprintSpeed * stimBoost * adsFactor;
-            cam.DoFov(sprintFov * stimFovBoost * adsFovFactor);
+            cam.DoFov(walkFov * sprintFovMultiplier * stimFovBoost * adsFovFactor);
         }
 
         // walking mode
@@ -167,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKey(sprintKey))
             {
                 moveSpeed = sprintSpeed * stimBoost * adsFactor;
-                cam.DoFov(sprintFov * stimFovBoost * adsFovFactor);
+                cam.DoFov(walkFov * sprintFovMultiplier * stimFovBoost * adsFovFactor);
             }
 
             else
@@ -325,7 +328,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ADSHandler()
     {
-        if (Input.GetMouseButton(1) && !Gun_Script.getGunData().getReloading())
+        if (Input.GetMouseButton(1) && !Gun_Script.getGunData().getReloading() && !dashing)
         {
             ads = true;
             adsFactor = adsMultiplier;

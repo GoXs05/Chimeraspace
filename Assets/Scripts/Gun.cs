@@ -115,7 +115,7 @@ public class Gun : MonoBehaviour
         {
             Shoot();
         }
-        if (Input.GetKeyDown(reloadKey))
+        if (Input.GetKeyDown(reloadKey) && gunData.getCurrentAmmo() != gunData.getMagSize())
         {
             StartReload();
         }

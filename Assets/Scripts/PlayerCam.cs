@@ -34,6 +34,17 @@ public class PlayerCam : MonoBehaviour
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX * PM_Script.getStimBoost() * PM_Script.getADSFovFactor();
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY * PM_Script.getStimBoost() * PM_Script.getADSFovFactor();
 
+        if(PM_Script.getMovementState() == PlayerMovement.MovementState.sprinting)
+        {
+            mouseX *= PM_Script.getSprintFovMultiplier();
+            mouseY *= PM_Script.getSprintFovMultiplier();
+        }
+        else if (PM_Script.getMovementState() == PlayerMovement.MovementState.wallrunning)
+        {
+            mouseX *= PM_Script.getWallRunFovMultiplier();
+            mouseY *= PM_Script.getWallRunFovMultiplier();
+        }
+
         yRotation += mouseX;
 
         xRotation -= mouseY;
