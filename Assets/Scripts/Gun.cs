@@ -24,6 +24,8 @@ public class Gun : MonoBehaviour
     private GameObject gunHolder;
     private Animator gunHolderAnim;
 
+    private GunShotPlayer GSP_Script;
+
 
 
     public GunData getGunData() { return gunData; }
@@ -33,6 +35,7 @@ public class Gun : MonoBehaviour
         gunData.setReloading(false);
         gunHolder = transform.parent.gameObject;
         gunHolderAnim = gunHolder.GetComponent<Animator>();
+        GSP_Script = transform.GetComponent<GunShotPlayer>();
     }
     public void StartReload()
     {
@@ -40,13 +43,15 @@ public class Gun : MonoBehaviour
             StartCoroutine(Reload());
     }
 
-    private bool CanShoot() => !gunData.getReloading() && timeSinceLastShot > 1f / (gunData.getFireRate() / 60);
+    private bool CanShoot() => !gunData.getReloading() && timeSinceLastShot > 1f / (gunData.getCurrentFireRate() / 60);
 
     void Shoot()
     {
         muzzleFlash.Play();
         light.transform.GetComponent<Light>().enabled = true;
         Invoke("LightOff", 0.1f);
+
+        GSP_Script.PlayGunShot();
         
         RaycastHit hitInfo;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, gunData.getMaxDistance()))
@@ -100,10 +105,12 @@ public class Gun : MonoBehaviour
             if (ads)
             {
                 gunHolderAnim.SetBool("ads", true);
+                gunData.setCurrentFireRate(gunData.getAdsFireRate());
             }
             else
             {
                 gunHolderAnim.SetBool("ads", false);
+                gunData.setCurrentFireRate(gunData.getFireRate());
             }
         }
     }

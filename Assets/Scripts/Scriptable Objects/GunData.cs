@@ -22,8 +22,9 @@ public class GunData : ScriptableObject
     [Header("Reloading")]
     [SerializeField] private int currentAmmo;
     [SerializeField] private int magSize;
+    private float currentFireRate;
     [Tooltip("In RPM")] [SerializeField] private float fireRate;
-    [SerializeField] private float adsFireRateMultiplier;
+    [SerializeField] private float adsFireRate;
     [SerializeField] private float reloadTime;
     [SerializeField] private bool reloading;
 
@@ -53,8 +54,8 @@ public class GunData : ScriptableObject
     public float getFireRate() { return fireRate; }
     public void setFireRate(float newFireRate) { fireRate = newFireRate; }
 
-    public float getAdsFireRateMultiplier() { return adsFireRateMultiplier; }
-    public void setAdsFireRateMultiplier(float newAdsFireRateMultiplier) { adsFireRateMultiplier = newAdsFireRateMultiplier; }
+    public float getAdsFireRate() { return adsFireRate; }
+    public void setAdsFireRate(float newAdsFireRate) { adsFireRate = newAdsFireRate; }
 
     public float getReloadTime() { return reloadTime; }
     public void setReloadTime(float newReloadTime) { reloadTime = newReloadTime; }
@@ -63,4 +64,7 @@ public class GunData : ScriptableObject
     public void setReloading(bool newReloadVal) { reloading = newReloadVal; }
 
     public RecoilInfoStruct getRecoilInfo() { return recoilInfo; }
+
+    public float getCurrentFireRate() { return currentFireRate; }
+    public void setCurrentFireRate(float newFireRate) { currentFireRate = newFireRate; }
 }
