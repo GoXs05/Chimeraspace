@@ -55,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerHeight;
     [SerializeField] private LayerMask whatIsGround;
     private bool grounded;
+    private bool closeToGround;
 
     [Header("Slope Handling")]
     [SerializeField] private float maxSlopeAngle;
@@ -68,6 +69,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("ADS")]
     private bool ads = false;
     private Gun Gun_Script;
+
+    [SerializeField] private float aimGlideForce;
+    private bool isAimGliding;
 
     [SerializeField] private Transform orientation;
 
@@ -195,13 +199,15 @@ public class PlayerMovement : MonoBehaviour
     {
 
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.25f, whatIsGround);
+        closeToGround = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 2f, whatIsGround);
 
         MyInput();
         SpeedControl();
         MovementStateHandle();
         MovementStim();
         ADSHandler();
+        AimGlideHandle();
 
         // handle drag
         if (grounded && !dashing)
@@ -330,9 +336,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetMouseButton(1) && !Gun_Script.getGunData().getReloading() && !dashing)
         {
-            ads = true;
             adsFactor = adsMultiplier;
             adsFovFactor = adsFovMultipler;
+            
+            ads = true;
         }
         else
         {
@@ -340,6 +347,27 @@ public class PlayerMovement : MonoBehaviour
             adsFactor = 1f;
             adsFovFactor = 1f;
         }
+    }
+
+    private void AimGlideHandle()
+    {
+        if (CanAimGlide() && ads) 
+        {
+            if (!isAimGliding && rb.velocity.y < 0)
+                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y / 4f, rb.velocity.z);
+            rb.AddForce(transform.up * (aimGlideForce), ForceMode.Force);
+            isAimGliding = true;
+        }
+        else
+        {
+            isAimGliding = false;
+        }
+    }
+
+    private bool CanAimGlide()
+    {
+        if (rb.velocity.y > 0 || closeToGround) return false;
+        return true;
     }
 
     // handles jump force additions to player's rigidbody component
