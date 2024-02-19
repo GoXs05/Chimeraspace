@@ -28,7 +28,7 @@ MonoBehaviour:
   impactForce: 0.5
   currentAmmo: 30
   magSize: 30
-  fireRate: 600
-  adsFireRate: 450
+  fireRate: 525
+  adsFireRate: 425
   reloadTime: 1.5
   reloading: 0

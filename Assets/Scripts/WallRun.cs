@@ -44,6 +44,7 @@ public class WallRun : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform orientation;
     [SerializeField] private PlayerCam cam;
+    [SerializeField] private PlayerAudioManager PAM_Script;
     private PlayerMovement pm;
     private Rigidbody rb;
     #endregion
@@ -208,5 +209,7 @@ public class WallRun : MonoBehaviour
         // reset y velocity and add force
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(forceToApply, ForceMode.Impulse);
+
+        PAM_Script.PlayJumpSound();
     }
 }

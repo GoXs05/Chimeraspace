@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunShotPlayer : MonoBehaviour
+public class GunSoundPlayer : MonoBehaviour
 {
     [SerializeField] private AudioSource source;
     [SerializeField] private AudioClip[] clips;

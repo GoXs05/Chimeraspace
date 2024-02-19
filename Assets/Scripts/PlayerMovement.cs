@@ -54,8 +54,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     [SerializeField] private float playerHeight;
     [SerializeField] private LayerMask whatIsGround;
-    private bool grounded;
+    private bool grounded = true;
     private bool closeToGround;
+    private bool canPlayLandEffect;
 
     [Header("Slope Handling")]
     [SerializeField] private float maxSlopeAngle;
@@ -72,6 +73,11 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float aimGlideForce;
     private bool isAimGliding;
+
+    [Header("Audio")]
+    [SerializeField] private PlayerAudioManager PAM_Script;
+
+
 
     [SerializeField] private Transform orientation;
 
@@ -197,10 +203,20 @@ public class PlayerMovement : MonoBehaviour
     // called every frame of the program
     private void Update()
     {
+        if (grounded == false)
+        {
+            canPlayLandEffect = true;
+        }
 
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.25f, whatIsGround);
         closeToGround = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 2f, whatIsGround);
+
+        if (grounded && canPlayLandEffect)
+        {
+            PAM_Script.PlayWalkSound(0f, 0f);
+            canPlayLandEffect = false;
+        }
 
         MyInput();
         SpeedControl();
@@ -243,6 +259,8 @@ public class PlayerMovement : MonoBehaviour
 
                 Jump();
 
+                PAM_Script.PlayJumpSound();
+
                 Invoke(nameof(ResetJump), jumpCooldown);
             }
 
@@ -251,6 +269,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 readyToDoubleJump = false;
                 Jump();
+
+                PAM_Script.PlayDoubleJumpSound();
             }
 
             // when to dash
@@ -285,6 +305,11 @@ public class PlayerMovement : MonoBehaviour
         // in air
         else if (!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+
+        if (grounded && !dashing && moveDirection != Vector3.zero)
+        {
+            PAM_Script.PlayWalkSound(moveSpeed, stimBoost);
+        }
     }
 
     // controls and standardizes speed 
@@ -413,6 +438,8 @@ public class PlayerMovement : MonoBehaviour
         canDash = false;
 
         cam.DoFov(dashFov * stimFovBoost * adsFovFactor);
+
+        PAM_Script.PlayDashSound();
 
         // dash cooldown timer
         StartCoroutine(DashTimerReset(dashCooldown));

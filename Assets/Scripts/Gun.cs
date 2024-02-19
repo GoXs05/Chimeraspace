@@ -24,7 +24,7 @@ public class Gun : MonoBehaviour
     private GameObject gunHolder;
     private Animator gunHolderAnim;
 
-    private GunShotPlayer GSP_Script;
+    private GunSoundPlayer GSP_Script;
 
 
 
@@ -35,7 +35,7 @@ public class Gun : MonoBehaviour
         gunData.setReloading(false);
         gunHolder = transform.parent.gameObject;
         gunHolderAnim = gunHolder.GetComponent<Animator>();
-        GSP_Script = transform.GetComponent<GunShotPlayer>();
+        GSP_Script = transform.GetComponent<GunSoundPlayer>();
     }
     public void StartReload()
     {
