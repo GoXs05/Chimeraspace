@@ -55,6 +55,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerHeight;
     [SerializeField] private LayerMask whatIsGround;
     private bool grounded = true;
+    private string groundTag;
+    private RaycastHit groundHitInfo;
     private bool closeToGround;
     private bool canPlayLandEffect;
 
@@ -113,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
     public float getSprintSpeed() { return sprintSpeed; }
     public float getWalkSpeed() { return walkSpeed; }
     public float getWallRunSpeed() { return wallRunSpeed; }
+    public float getMoveSpeed() { return moveSpeed; }
     public float getStimMultiplier() { return stimMultiplier; }
     public float getStimBoost() { return stimBoost; }
     public float getStimDuration() { return stimDuration; }
@@ -203,20 +206,8 @@ public class PlayerMovement : MonoBehaviour
     // called every frame of the program
     private void Update()
     {
-        if (grounded == false)
-        {
-            canPlayLandEffect = true;
-        }
-
-        // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.25f, whatIsGround);
-        closeToGround = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 2f, whatIsGround);
-
-        if (grounded && canPlayLandEffect)
-        {
-            PAM_Script.PlayWalkSound(0f, 0f);
-            canPlayLandEffect = false;
-        }
+        GroundedCheck();
+        GroundAudioTagManager();
 
         MyInput();
         SpeedControl();
@@ -224,17 +215,56 @@ public class PlayerMovement : MonoBehaviour
         MovementStim();
         ADSHandler();
         AimGlideHandle();
+        HandleDrag();
+        DoubleJumpReset();
+    }
 
+    private void GroundedCheck()
+    {
+        if (grounded == false)
+        {
+            canPlayLandEffect = true;
+        }
+
+        // ground check
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        closeToGround = Physics.Raycast(transform.position, Vector3.down, out groundHitInfo, playerHeight * 0.5f + 2f, whatIsGround);
+
+        if (grounded && canPlayLandEffect)
+        {
+            PAM_Script.PlayWalkSound(0f, 0f);
+            canPlayLandEffect = false;
+        }
+    }
+
+    private void GroundAudioTagManager()
+    {
+        if ((closeToGround && groundHitInfo.transform.tag == "Tile") || wallrunning)
+        {
+            groundTag = "Tile";
+        }
+        else if (closeToGround && groundHitInfo.transform.tag == "Grass")
+        {
+            groundTag = "Grass";
+        }
+
+        PAM_Script.WalkingClipManager(groundTag);
+    }
+
+    private void HandleDrag()
+    {
         // handle drag
         if (grounded && !dashing)
             rb.drag = groundDrag;
         else
             rb.drag = 0;
+    }
 
+    private void DoubleJumpReset()
+    {
         // double jump reset
         if (grounded || state == MovementState.wallrunning)
             readyToDoubleJump = true;
-
     }
 
     // called 50 times per second for physics calculations
@@ -292,7 +322,7 @@ public class PlayerMovement : MonoBehaviour
         // on slope
         if (OnSlope() && !exitingSlope && !dashing)
         {
-            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
+            rb.AddForce(moveSpeed * 20f * GetSlopeMoveDirection(), ForceMode.Force);
 
             if (rb.velocity.y > 0)
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
@@ -300,13 +330,13 @@ public class PlayerMovement : MonoBehaviour
 
         // on ground
         else if (grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            rb.AddForce(moveSpeed * 10f * moveDirection.normalized, ForceMode.Force);
 
         // in air
         else if (!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            rb.AddForce(moveSpeed * 10f * airMultiplier * moveDirection.normalized, ForceMode.Force);
 
-        if (grounded && !dashing && moveDirection != Vector3.zero)
+        if (grounded && !dashing && moveDirection != Vector3.zero && (Mathf.Abs(rb.velocity.x + rb.velocity.z) > Mathf.Epsilon))
         {
             PAM_Script.PlayWalkSound(moveSpeed, stimBoost);
         }
@@ -337,7 +367,7 @@ public class PlayerMovement : MonoBehaviour
         // simulates friction to stop player from "sliding" to a stop when no movement input is given
         if ((grounded || wallrunning) && moveDirection == Vector3.zero && (Mathf.Abs(rb.velocity.x) > Mathf.Epsilon || Mathf.Abs(rb.velocity.z) > Mathf.Epsilon))
         {
-            rb.AddForce(new Vector3(rb.velocity.x, 0f, rb.velocity.z) * moveSpeed * -1f, ForceMode.Force);
+            rb.AddForce(moveSpeed * -1f * new Vector3(rb.velocity.x, 0f, rb.velocity.z), ForceMode.Force);
         }
         
     }

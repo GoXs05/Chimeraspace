@@ -156,6 +156,8 @@ public class WallRun : MonoBehaviour
         cam.DoFov(pm.getWalkFov() * pm.getWallRunFovMultiplier() * pm.getStimFovBoost());
         if (wallLeft) cam.DoTilt(-5f);
         if (wallRight) cam.DoTilt(5f);
+
+        PAM_Script.PlayWalkSound(0f, 0f);
     }
 
     private void WallRunningMovement()
@@ -185,6 +187,8 @@ public class WallRun : MonoBehaviour
         // weaken gravity
         if (useGravity)
             rb.AddForce(transform.up * gravityCounterForce, ForceMode.Force);
+
+        PAM_Script.PlayWalkSound(pm.getMoveSpeed() * 2, pm.getStimBoost());
     }
 
     private void StopWallRun()

@@ -54,9 +54,9 @@ public class WeaponBob : MonoBehaviour
         if (!mover.getADS())
         {
             speedCurve += Time.deltaTime * (mover.getGrounded() ? (rb.velocity.magnitude)*bobExaggeration : 1f) + 0.01f;
-            bobPosition.x = (curveCos*bobLimit.x*(mover.getGrounded() ? 1:0))-(walkInput.x * travelLimit.x);
-            bobPosition.y = (curveSin*bobLimit.y)-(Input.GetAxis("Vertical") * travelLimit.y);
-            bobPosition.z = -(walkInput.y * travelLimit.z);
+            bobPosition.x = (curveCos * bobLimit.x * (mover.getGrounded() ? 1:0)) - (walkInput.x * travelLimit.x);
+            bobPosition.y = (curveSin * bobLimit.y) - (Input.GetAxis("Vertical") * travelLimit.y);
+            bobPosition.z = -1f * (walkInput.y * travelLimit.z);
         }
         else
         {
@@ -70,7 +70,7 @@ public class WeaponBob : MonoBehaviour
     {
         if (!mover.getADS())
         {
-            bobEulerRotation.x = (walkInput != Vector2.zero ? multiplier.x * (Mathf.Sin(2*speedCurve)) : multiplier.x * (Mathf.Sin(2*speedCurve) / 2));
+            bobEulerRotation.x = (walkInput != Vector2.zero ? multiplier.x * (Mathf.Sin(2 * speedCurve)) : multiplier.x * (Mathf.Sin(2 * speedCurve) / 2));
             bobEulerRotation.y = (walkInput != Vector2.zero ? multiplier.y * curveCos : 0);
             bobEulerRotation.z = (walkInput != Vector2.zero ? multiplier.z * curveCos * walkInput.x : 0);
         }
