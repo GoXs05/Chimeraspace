@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+[RequireComponent(typeof(WallRun))]
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
     #region Variables
@@ -409,7 +411,10 @@ public class PlayerMovement : MonoBehaviour
         if (CanAimGlide() && ads) 
         {
             if (!isAimGliding && rb.velocity.y < 0)
+            {
                 rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y / 4f, rb.velocity.z);
+                PAM_Script.PlayAimGlideSound();
+            }
             rb.AddForce(transform.up * (aimGlideForce), ForceMode.Force);
             isAimGliding = true;
         }

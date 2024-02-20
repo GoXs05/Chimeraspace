@@ -11,14 +11,17 @@ public class PlayerAudioManager : MonoBehaviour
     [SerializeField] private List<AudioClip> jumpingClips;
     [SerializeField] private List<AudioClip> doubleJumpingClips;
     [SerializeField] private List<AudioClip> dashingClips;
+    [SerializeField] private List<AudioClip> aimGlidingClips;
 
     private List<AudioClip> walkingClips;
 
     private float timeSinceLastStep = 0f;
+    private float timeSinceAimGlide = 0f;
 
     void Update()
     {
         timeSinceLastStep += Time.deltaTime;
+        timeSinceAimGlide += Time.deltaTime;
     }
 
     public void WalkingClipManager(string groundTag)
@@ -48,6 +51,17 @@ public class PlayerAudioManager : MonoBehaviour
         int randomIndex = Random.Range(0, doubleJumpingClips.Count);
         AudioClip clip = doubleJumpingClips[randomIndex];
         source.PlayOneShot(clip);
+    }
+
+    public void PlayAimGlideSound()
+    {
+        if (timeSinceAimGlide > 0.5f)
+        {
+            int randomIndex = Random.Range(0, aimGlidingClips.Count);
+            AudioClip clip = aimGlidingClips[randomIndex];
+            source.PlayOneShot(clip);
+            timeSinceAimGlide = 0f;
+        }
     }
 
     public void PlayWalkSound(float moveSpeed, float stimBoost)

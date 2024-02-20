@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(DamagePopupGenerator))]
+[RequireComponent(typeof(Animator))]
 public class Target : MonoBehaviour, IDamageable, ITarget
 {   
     [SerializeField] private Material[] materials;
     [SerializeField] private GameObject glowObj;
-    [SerializeField] private DamagePopupGenerator dmgPopupGen;
+    private DamagePopupGenerator dmgPopupGen;
 
     private float health = 50;
 
@@ -21,6 +23,7 @@ public class Target : MonoBehaviour, IDamageable, ITarget
         targetPos = transform.position;
         startPos = transform.position;
 
+        dmgPopupGen = GetComponent<DamagePopupGenerator>();
         animator = GetComponent<Animator>();
     }
 

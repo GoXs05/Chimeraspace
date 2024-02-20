@@ -11,6 +11,7 @@ public class Gun : MonoBehaviour
     [SerializeField] private Recoil Recoil_Script;
     [SerializeField] private GunData gunData;
     [SerializeField] private PlayerMovement PM_Script;
+    [SerializeField] private AmmoDisplay AD_Script;
     private bool ads = false;
 
     [SerializeField] private KeyCode reloadKey = KeyCode.R;
@@ -34,8 +35,16 @@ public class Gun : MonoBehaviour
     {
         gunData.setReloading(false);
         gunHolder = transform.parent.gameObject;
+
         gunHolderAnim = gunHolder.GetComponent<Animator>();
         GSP_Script = transform.GetComponent<GunSoundPlayer>();
+
+        gunData.setTotalAmmo(gunData.getMaxTotalAmmo());
+        gunData.setCurrentAmmo(gunData.getMagSize());
+
+        AD_Script.SetCurrentAmmoUI(gunData.getCurrentAmmo());
+        AD_Script.SetTotalAmmoUI(gunData.getTotalAmmo());
+        AD_Script.SetGunNameUI(gunData.getName());
     }
     public void StartReload()
     {
@@ -68,6 +77,8 @@ public class Gun : MonoBehaviour
 
         // Check for target to apply impact
         TargetHandler();
+
+        AD_Script.SetCurrentAmmoUI(gunData.getCurrentAmmo());
     }
 
     private void TargetHandler()
@@ -87,8 +98,20 @@ public class Gun : MonoBehaviour
 
         yield return new WaitForSeconds(gunData.getReloadTime());
 
-        gunData.setCurrentAmmo(gunData.getMagSize());
+        if (gunData.getMagSize() <= gunData.getTotalAmmo())
+        {
+            gunData.setCurrentAmmo(gunData.getMagSize());
+            gunData.setTotalAmmo(gunData.getTotalAmmo() - gunData.getMagSize());
+        }
+        else
+        {
+            gunData.setCurrentAmmo(gunData.getTotalAmmo());
+            gunData.setTotalAmmo(0);
+        }
         gunData.setReloading(false);
+
+        AD_Script.SetCurrentAmmoUI(gunData.getCurrentAmmo());
+        AD_Script.SetTotalAmmoUI(gunData.getTotalAmmo());
     }
 
     private void GunManager() 
@@ -122,7 +145,7 @@ public class Gun : MonoBehaviour
         {
             Shoot();
         }
-        if (Input.GetKeyDown(reloadKey) && gunData.getCurrentAmmo() != gunData.getMagSize())
+        if ((Input.GetKeyDown(reloadKey) && gunData.getCurrentAmmo() != gunData.getMagSize()) || gunData.getCurrentAmmo() == 0)
         {
             StartReload();
         }
@@ -130,5 +153,10 @@ public class Gun : MonoBehaviour
         GunManager();
 
         transform.localPosition = Recoil_Script.getCurrentPosition();
+
+        if (gunData.getTotalAmmo() == 0)
+        {
+            gunData.setTotalAmmo(gunData.getMaxTotalAmmo());
+        }
     }
 }

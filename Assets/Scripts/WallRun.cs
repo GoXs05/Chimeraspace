@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(Rigidbody))]
 public class WallRun : MonoBehaviour
 {
     #region Variables

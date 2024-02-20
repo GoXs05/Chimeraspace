@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ce7ba6154ce2e478f9d069c11c2378, type: 3}
   m_Name: Rifle
   m_EditorClassIdentifier: 
-  name: Rifle
+  name: Stormcaster
   damage: 25
   maxDistance: 200
   hipFireSpread: 0
@@ -28,6 +28,8 @@ MonoBehaviour:
   impactForce: 0.5
   currentAmmo: 30
   magSize: 30
+  totalAmmo: 879
+  maxTotalAmmo: 999
   fireRate: 500
   adsFireRate: 400
   reloadTime: 1.5

@@ -22,6 +22,8 @@ public class GunData : ScriptableObject
     [Header("Reloading")]
     [SerializeField] private int currentAmmo;
     [SerializeField] private int magSize;
+    [SerializeField] private int totalAmmo;
+    [SerializeField] private int maxTotalAmmo;
     private float currentFireRate;
     [Tooltip("In RPM")] [SerializeField] private float fireRate;
     [SerializeField] private float adsFireRate;
@@ -50,6 +52,12 @@ public class GunData : ScriptableObject
 
     public int getMagSize() { return magSize; }
     public void setMagSize(int newMagSize) { magSize = newMagSize; }
+
+    public int getTotalAmmo() { return totalAmmo; }
+    public void setTotalAmmo(int newTotalAmmo) { totalAmmo = newTotalAmmo; }
+
+    public int getMaxTotalAmmo() { return maxTotalAmmo; }
+    public void setMaxTotalAmmo(int newMaxTotalAmmo) { maxTotalAmmo = newMaxTotalAmmo; }
 
     public float getFireRate() { return fireRate; }
     public void setFireRate(float newFireRate) { fireRate = newFireRate; }
