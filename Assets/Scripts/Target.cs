@@ -6,6 +6,7 @@ public class Target : MonoBehaviour, IDamageable, ITarget
 {   
     [SerializeField] private Material[] materials;
     [SerializeField] private GameObject glowObj;
+    [SerializeField] private DamagePopupGenerator dmgPopupGen;
 
     private float health = 50;
 
@@ -39,6 +40,7 @@ public class Target : MonoBehaviour, IDamageable, ITarget
         if (health > 0)
         {
             health -= damage;
+            dmgPopupGen.CreatePopup(transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0f, Random.Range(-0.5f, 0.5f)), damage.ToString());
             if (health <= 0)
             {
                 StartCoroutine(ColorManager());
