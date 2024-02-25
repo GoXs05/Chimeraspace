@@ -105,8 +105,8 @@ public class Gun : MonoBehaviour
 
         if (gunData.getMagSize() <= gunData.getTotalAmmo())
         {
+            gunData.setTotalAmmo(gunData.getTotalAmmo() - (gunData.getMagSize() - gunData.getCurrentAmmo()));
             gunData.setCurrentAmmo(gunData.getMagSize());
-            gunData.setTotalAmmo(gunData.getTotalAmmo() - gunData.getMagSize());
         }
         else
         {
