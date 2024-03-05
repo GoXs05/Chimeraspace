@@ -7,6 +7,8 @@ public class Gun : MonoBehaviour
     [SerializeField] private Camera fpsCam;
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private new GameObject light;
+    [SerializeField] private GameObject bulletHolePrefab;
+    [SerializeField] private GameObject bulletHoleContainer;
 
     [SerializeField] private Recoil Recoil_Script;
     [SerializeField] private GunData gunData;
@@ -63,14 +65,21 @@ public class Gun : MonoBehaviour
         Invoke("LightOff", 0.1f);
 
         GSP_Script.PlayGunShot();
-        
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, gunData.getMaxDistance()))
         {
-            // Debug.Log(hitInfo.transform);
             IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
             damageable?.TakeDamage(gunData.getDamage());
             hit = hitInfo;
+
+            float posFactor = 0.01f;
+            Vector3 spawnPos = new Vector3 (hit.point.x - (ray.direction.x * posFactor), hit.point.y - (ray.direction.y * posFactor), hit.point.z - (ray.direction.z * posFactor));
+            GameObject bulletHole = Instantiate(bulletHolePrefab, spawnPos, Quaternion.identity);
+
+            bulletHole.transform.rotation = Quaternion.LookRotation(-hit.normal);
+            bulletHole.transform.SetParent(bulletHoleContainer.transform);
         }
 
         Recoil_Script.RecoilFire();

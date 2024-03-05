@@ -534,6 +534,8 @@ MonoBehaviour:
   fpsCam: {fileID: 5391167200228524601}
   muzzleFlash: {fileID: 0}
   light: {fileID: 0}
+  bulletHolePrefab: {fileID: 0}
+  bulletHoleContainer: {fileID: 0}
   Recoil_Script: {fileID: 6509555131553528421}
   gunData: {fileID: 11400000, guid: dd03f87dda510174291737d87be5a1b1, type: 2}
   PM_Script: {fileID: 0}
@@ -5895,6 +5897,9 @@ MonoBehaviour:
   fpsCam: {fileID: 5391167200228524601}
   muzzleFlash: {fileID: 9134960086801725775}
   light: {fileID: 627264378736597445}
+  bulletHolePrefab: {fileID: 6295954225606224724, guid: 9faae0ed34a385e40a14fe830f55abf1,
+    type: 3}
+  bulletHoleContainer: {fileID: 0}
   Recoil_Script: {fileID: 6509555131553528421}
   gunData: {fileID: 11400000, guid: 970e6b379c1311f48bde7f1512ba86f5, type: 2}
   PM_Script: {fileID: 4252036194391099102}
@@ -16992,7 +16997,7 @@ RectTransform:
   m_GameObject: {fileID: 2955996659399884621}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7565793513893419695}
@@ -17003,7 +17008,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -700, y: -400}
+  m_AnchoredPosition: {x: -750, y: -450}
   m_SizeDelta: {x: 429.41202, y: 266}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3148868821985390098
@@ -28083,6 +28088,7 @@ GameObject:
   - component: {fileID: 7171214762530559810}
   - component: {fileID: 5309947650707483561}
   - component: {fileID: 1649964588769603389}
+  - component: {fileID: 7636701680774100263}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -28335,6 +28341,21 @@ MonoBehaviour:
   source: {fileID: 5309947650707483561}
   clip: {fileID: 8300000, guid: 448082794eaa17a4984fbb8ab66cf92f, type: 3}
   soundDuration: 33
+--- !u!114 &7636701680774100263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5839767345255623454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc5e6f2f0ce79d4eb6a005b405cd961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData: {fileID: 11400000, guid: f430ffbb8b2d236458c82d2e317efb63, type: 2}
+  playerHealthBar: {fileID: 2930699244229560306}
+  playerShieldsBar: {fileID: 7067945162665677326}
 --- !u!1 &5974047740417852856
 GameObject:
   m_ObjectHideFlags: 0
@@ -28457,12 +28478,12 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6005392639229162818}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a53d65b68cd68614ca259575382dcbb6, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.1
+  m_Volume: 0.03
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -28637,7 +28658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: dd1d5c0636912dc4098abb99fcb375a5, type: 2}
-  m_Color: {r: 0, g: 0.878788, b: 1, a: 0.29411766}
+  m_Color: {r: 0, g: 0.8784313, b: 1, a: 0.2627451}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -29375,7 +29396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2705937963822790449
 RectTransform:
   m_ObjectHideFlags: 0
