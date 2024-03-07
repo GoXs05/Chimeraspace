@@ -48,8 +48,6 @@ public class PlayerHealth : MonoBehaviour, IPlayerDamageable
     }
     public void RegenHealth()
     {
-        Debug.Log("regenerating health: " + playerData.GetHealthRegenSpeed());
-
         float regenSpeedFrame = playerData.GetHealthRegenSpeed() * Time.deltaTime;
 
         if ((regenSpeedFrame + playerData.GetHealth()) < kMaxRegenHealth) 
@@ -66,7 +64,6 @@ public class PlayerHealth : MonoBehaviour, IPlayerDamageable
 
     public void RegenShields()
     {
-        Debug.Log("regenerating shields: " + playerData.GetShieldsRegenSpeed());
         float regenSpeedFrame = playerData.GetShieldsRegenSpeed() * Time.deltaTime;
 
         if ((regenSpeedFrame + playerData.GetShields()) < kMaxRegenShields) 
@@ -79,6 +76,24 @@ public class PlayerHealth : MonoBehaviour, IPlayerDamageable
         }
 
         playerShieldsBar.UpdateUIBar(PlayerData.kMaxShields, playerData.GetShields());
+    }
+
+    public void AddHealth(float healthAddValue)
+    {
+        if (playerData.GetHealth() < PlayerData.kMaxHealth)
+        {
+            playerData.SetHealth(playerData.GetHealth() + healthAddValue);
+            playerHealthBar.UpdateUIBar(PlayerData.kMaxHealth, playerData.GetHealth());
+        }
+    }
+
+    public void AddShields(float shieldsAddValue) 
+    {
+        if (playerData.GetShields() < PlayerData.kMaxShields)
+        {
+            playerData.SetShields(playerData.GetShields() + shieldsAddValue);
+            playerShieldsBar.UpdateUIBar(PlayerData.kMaxShields, playerData.GetShields());
+        }
     }
 
     private void Update() 

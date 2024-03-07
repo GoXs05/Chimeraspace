@@ -80,6 +80,8 @@ public class Gun : MonoBehaviour
 
             bulletHole.transform.rotation = Quaternion.LookRotation(-hit.normal);
             bulletHole.transform.SetParent(bulletHoleContainer.transform);
+
+            Destroy(bulletHole, 5f);
         }
 
         Recoil_Script.RecoilFire();

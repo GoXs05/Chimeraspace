@@ -93,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2337619129889638585}
   m_Layer: 6
-  m_Name: WallRunPad
+  m_Name: OldWallRunPad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
