@@ -17,8 +17,8 @@ MonoBehaviour:
   maxDistance: 200
   hipFireSpread: 0
   recoilInfo:
-    recoil: {x: -2.5, y: 3, z: 0.5}
-    ADSRecoil: {x: -1.5, y: 2, z: 0.3}
+    recoil: {x: -2.5, y: 2, z: 0.5}
+    ADSRecoil: {x: -1.5, y: 1.35, z: 0.3}
     posRecoil: {x: 0.025, y: 0.005, z: 0.01}
     ADSPosRecoil: {x: 0.01, y: 0.002, z: 0.003}
     snappiness: 6
@@ -26,9 +26,9 @@ MonoBehaviour:
     posSnappiness: 13
     posReturnSpeed: 10
   impactForce: 0.5
-  currentAmmo: 30
+  currentAmmo: 17
   magSize: 30
-  totalAmmo: 879
+  totalAmmo: 593
   maxTotalAmmo: 999
   fireRate: 500
   adsFireRate: 400
