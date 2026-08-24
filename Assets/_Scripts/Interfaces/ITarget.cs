@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ITarget
 {
-    public void TakeImpact(float impactForce, RaycastHit hit);
+    public void TakeImpact(float impactForce, Vector3 shotDir);
 }

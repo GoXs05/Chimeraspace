@@ -53,9 +53,9 @@ public class Target : MonoBehaviour, IDamageable, ITarget
         }
     }
 
-    public void TakeImpact(float impactForce, RaycastHit hit)
+    public void TakeImpact(float impactForce, Vector3 shotDir)
     {
-        targetPos += -hit.normal * impactForce;
+        targetPos += shotDir.normalized * impactForce;
     }
 
     private IEnumerator ColorManager() 

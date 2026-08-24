@@ -60,8 +60,12 @@ public class WeaponBob : MonoBehaviour
         }
         else
         {
-            speedCurve = 0;
-            bobPosition = Vector3.zero;
+            //speedCurve = 0;
+            //bobPosition = Vector3.zero;
+            speedCurve += Time.deltaTime * (walkInput != Vector2.zero ? 1:0) * (mover.getGrounded() ? (rb.velocity.magnitude) * bobExaggeration : 1f) + 0.01f;
+            bobPosition.x = ((curveCos * bobLimit.x * (mover.getGrounded() ? 1:0)) - (walkInput.x * travelLimit.x)) * 0.1f * (walkInput != Vector2.zero ? 1:0);
+            bobPosition.y = ((curveSin * bobLimit.y) - (Input.GetAxis("Vertical") * travelLimit.y)) * 0.1f * (walkInput != Vector2.zero ? 1:0);
+            bobPosition.z = -0.1f * (walkInput.y * travelLimit.z) * (walkInput != Vector2.zero ? 1:0);
         }
             
     }
@@ -76,7 +80,9 @@ public class WeaponBob : MonoBehaviour
         }
         else
         {
-            bobEulerRotation = Vector3.zero;
+            bobEulerRotation.x = (walkInput != Vector2.zero ? multiplier.x * (Mathf.Sin(2 * speedCurve)) : 0);
+            bobEulerRotation.y = (walkInput != Vector2.zero ? multiplier.y * curveCos : 0);
+            bobEulerRotation.z = (walkInput != Vector2.zero ? multiplier.z * curveCos * walkInput.x : 0);
         }
         
     }

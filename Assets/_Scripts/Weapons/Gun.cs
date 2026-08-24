@@ -22,6 +22,8 @@ public class Gun : MonoBehaviour
 
     private RaycastHit hit;
 
+    private Vector3 lastShotDir;
+
     private float timeSinceLastShot = 0f;
 
     private RecoilInfoStruct recoilInfo;
@@ -66,38 +68,46 @@ public class Gun : MonoBehaviour
 
         GSP_Script.PlayGunShot();
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = new Ray(fpsCam.transform.position, fpsCam.transform.forward);
         RaycastHit hitInfo;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, gunData.getMaxDistance()))
+
+        lastShotDir = ray.direction;
+
+        if (Physics.Raycast(ray, out hitInfo, gunData.getMaxDistance()))
         {
             IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
             damageable?.TakeDamage(gunData.getDamage());
             hit = hitInfo;
 
-            float posFactor = 0.01f;
-            Vector3 spawnPos = new Vector3 (hit.point.x - (ray.direction.x * posFactor), hit.point.y - (ray.direction.y * posFactor), hit.point.z - (ray.direction.z * posFactor));
-            GameObject bulletHole = Instantiate(bulletHolePrefab, spawnPos, Quaternion.identity);
+            // Check for target to apply impact
+            bool isTarget = TargetHandler();
 
-            bulletHole.transform.rotation = Quaternion.LookRotation(-hit.normal);
-            bulletHole.transform.SetParent(bulletHoleContainer.transform);
+            if (!isTarget)
+            {
+                float posFactor = 0.01f;
+                Vector3 spawnPos = hit.point - ray.direction * posFactor;
+                GameObject bulletHole = Instantiate(bulletHolePrefab, spawnPos, Quaternion.identity);
 
-            Destroy(bulletHole, 5f);
+                bulletHole.transform.rotation = Quaternion.LookRotation(-hit.normal);
+                bulletHole.transform.SetParent(bulletHoleContainer.transform);
+
+                Destroy(bulletHole, 5f);
+            }
         }
 
         Recoil_Script.RecoilFire();
         gunData.DecrementCurrentAmmo();
         timeSinceLastShot = 0;
 
-        // Check for target to apply impact
-        TargetHandler();
-
         AD_Script.SetCurrentAmmoUI(gunData.getCurrentAmmo());
     }
 
-    private void TargetHandler()
+    private bool TargetHandler()
     {
         ITarget target = hit.transform.GetComponent<ITarget>();
-        target?.TakeImpact(gunData.getImpactForce(), hit);
+        target?.TakeImpact(gunData.getImpactForce(), lastShotDir);
+        if (target == null) return false;
+        else return true;
     }
 
     void LightOff() 
